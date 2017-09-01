@@ -4,13 +4,12 @@
 import React, {Component} from 'react';
 import {View,FlatList,Text,TouchableOpacity} from 'react-native'
 import { Icon,Button } from 'react-native-elements'
+
 export default class ShowDBs extends Component {
-
-
 
     //渲染列表元素
     _renderItem = ({item})=>(
-        <TouchableOpacity onPress={()=>this.props.navigation.navigate('ShowKeys')}>
+        <TouchableOpacity onPress={()=>this.props.navigation.navigate('ShowKeys',{dbindex:item.key})}>
             <View
                 style={{
                 height: 50,

@@ -7,6 +7,8 @@ import formPage from './formPage';
 import home from './homePage.js';
 import showDBs from './showDBsPage.js';
 import showKeys from './dbkeysPage'
+import detailText from './detailTextPage'
+import detailList from './detailListPage'
 export default App = StackNavigator({
     Home: {
         screen: home,
@@ -30,6 +32,12 @@ export default App = StackNavigator({
         screen: showKeys,
         navigationOptions: {
             headerTitle: 'KEYS'
+        }
+    },
+    DetailList: {
+        screen: detailList,
+        navigationOptions: {
+            headerTitle: 'DETAIL LIST'
         }
     }
 });

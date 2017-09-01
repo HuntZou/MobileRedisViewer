@@ -13,7 +13,7 @@ export default class HomePage extends Component {
 
         setTimeout(function () {
             navigate('FormPage');
-        }, 2000);
+        }, 1000);
 
         return (
             <View style={{ flex:1,justifyContent:'center',alignItems:'center',backgroundColor: '#F5FCFF' }}>
