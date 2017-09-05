@@ -1,10 +1,11 @@
 import React,{Component} from 'react';
+import { servers } from '../compoent/config.js'
 import {
     StyleSheet,
     View,
     Text,
     SectionList,
-    TouchableOpacity
+    TouchableOpacity,
 } from 'react-native';
 import { Icon } from 'react-native-elements'
 
@@ -18,13 +19,17 @@ export default class ShowDbKeys extends Component {
         }
     }
 
+    //在组件将要装载的时候加载数据
+    componentWillMount() {
+        this.getAllKeys();
+    }
+
     //组件将要被卸载触发的事件
     componentWillUnmount() {
         this.alive = false;
     }
 
     render() {
-        this.getAllKeys();
 
         return (
             <View style={{flex:1,paddingLeft:10,paddingRight:10}}>
@@ -38,12 +43,13 @@ export default class ShowDbKeys extends Component {
     }
 
     getAllKeys() {
-        fetch("http://192.168.1.133:1995/getKeys", {
+
+        fetch(servers + "getKeys", {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/x-www-form-urlencoded'
             },
-            body: 'ip=192.168.1.139&port=6379&dbindex=' + this.props.navigation.state.params.dbindex
+            body: 'ip=' + this.props.navigation.state.params.ip + '&port=' + this.props.navigation.state.params.port + '&pwd=' + this.props.navigation.state.params.pwd + '&dbindex=' + this.props.navigation.state.params.dbindex
         }).then((resp)=>resp.json()).then((respJson)=> {
             let copy_sections = this.initDataSource();
             for (var key in respJson.content) {
@@ -118,7 +124,10 @@ export default class ShowDbKeys extends Component {
 
         this.props.navigation.navigate("DetailList", {
             type: info.section.key,
-            key: info.item.key
+            key: info.item.key,
+            ip: this.props.navigation.state.params.ip,
+            port: this.props.navigation.state.params.port,
+            pwd: this.props.navigation.state.params.pwd
         });
     }
 

@@ -9,7 +9,12 @@ export default class ShowDBs extends Component {
 
     //渲染列表元素
     _renderItem = ({item})=>(
-        <TouchableOpacity onPress={()=>this.props.navigation.navigate('ShowKeys',{dbindex:item.key})}>
+        <TouchableOpacity onPress={()=>this.props.navigation.navigate('ShowKeys',{
+            dbindex:item.key,
+            ip: this.props.navigation.state.params.ip,
+            port: this.props.navigation.state.params.port,
+            pwd: this.props.navigation.state.params.pwd
+        })}>
             <View
                 style={{
                 height: 50,
@@ -28,7 +33,7 @@ export default class ShowDBs extends Component {
                 <Icon color="#838B8B" name='navigate-next'/>
             </View>
         </TouchableOpacity>
-    )
+    );
 
     render() {
 

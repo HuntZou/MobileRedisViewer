@@ -2,19 +2,45 @@
  * Created by Administrator on 2017/9/1.
  */
 import React,{Component} from 'react';
-import {View,Text,FlatList} from 'react-native';
-import {Grid, Col} from 'react-native-elements';
+import {View,Text,FlatList,AsyncStorage} from 'react-native';
+import { servers } from '../compoent/config.js'
 
 export default class DetailText extends Component {
 
     constructor(props) {
         super(props);
+        this.alive = true;
         this.state = {
             dataSource: []
         }
     }
 
+    //在组件将要装载的时候加载数据
+    componentWillMount() {
+        this.loadData();
+    }
+
+    componentWillUnmount() {
+        this.alive = false;
+    }
+
     render() {
+
+        return (
+            <View style={{ paddingLeft:10,paddingRight:10 }}>
+                <View style={{ flexDirection:'row' }}>
+                    <Text style={{ flex:1,fontSize:20 }}>key</Text>
+                    <Text style={{ flex:4,fontSize:20,marginLeft:10 }}>value</Text>
+                </View>
+                <FlatList
+                    data={this.state.dataSource}
+                    renderItem={({item})=>this.createListItemView(item)}/>
+            </View>
+        );
+
+    }
+
+    loadData() {
         const { params } = this.props.navigation.state;
 
         let reqUri = '';
@@ -37,12 +63,12 @@ export default class DetailText extends Component {
                 break;
         }
 
-        fetch("http://192.168.1.133:1995/" + reqUri, {
+        fetch(servers + reqUri, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/x-www-form-urlencoded'
             },
-            body: 'ip=192.168.1.139&port=6379&dbindex=0&key=' + params.key
+            body: 'ip=' + params.ip + '&port=' + params.port + '&pwd=' + params.pwd + '&key=' + params.key
         }).then((resp)=>resp.json()).then((respJson)=> {
             let datasource = new Array();
             for (let key in respJson.content) {
@@ -51,43 +77,19 @@ export default class DetailText extends Component {
                     value: respJson.content[key]
                 });
             }
-            //console.log(datasource)
-            this.setState({
-                dataSource: datasource
-            });
+            if (this.alive)
+                this.setState({
+                    dataSource: datasource
+                });
         });
-
-        return params.type == 'string' ? this.createStringView(params.key) : this.createListView(params.type);
-
     }
 
-    createStringView(key) {
-        return (<Text>{this.state.dataSource[key]}</Text>);
-    }
-
-    createListView(type) {
+    createListItemView(item) {
         return (
-            <View>
-                <FlatList
-                    data={this.state.dataSource}
-                    renderItem={({item})=>this.createListItemView(type,item)}/>
+            <View style={{ flexDirection:'row',borderWidth:1,borderColor:'black' }}>
+                <Text style={{ flex:1,borderRightWidth:1,borderRightColor:'black' }}>{item.key}</Text>
+                <Text style={{ flex:4,marginLeft:10 }}>{item.value}</Text>
             </View>
         );
     }
-
-    createListItemView(type, item) {
-        return (
-            'list' == type || 'set' == type ? (<Grid><Col>{item.key}</Col><Col>{item.value}</Col></Grid>) : (
-                <Grid><Col>{item.key}</Col><Col>{item.value}</Col><Col>{item.value}</Col></Grid>)
-        );
-    }
 }
-
-//{
-//    "content": {
-//    "a": 2,
-//        "dsd": 1,
-//        "f": 3
-//},
-//    "status": "success"
-//}
