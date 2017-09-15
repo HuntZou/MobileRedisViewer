@@ -7,6 +7,7 @@ import {
 export default class HomePage extends Component {
 
     render() {
+
         const { navigate } = this.props.navigation;
 
         setTimeout(function () {

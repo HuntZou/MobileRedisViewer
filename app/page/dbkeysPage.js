@@ -127,7 +127,8 @@ export default class ShowDbKeys extends Component {
             key: info.item.key,
             ip: this.props.navigation.state.params.ip,
             port: this.props.navigation.state.params.port,
-            pwd: this.props.navigation.state.params.pwd
+            pwd: this.props.navigation.state.params.pwd,
+            dbindex: this.props.navigation.state.params.dbindex
         });
     }
 

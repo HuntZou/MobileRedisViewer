@@ -25,7 +25,6 @@ export default class DetailText extends Component {
     }
 
     render() {
-
         return (
             <View style={{ paddingLeft:10,paddingRight:10 }}>
                 <View style={{ flexDirection:'row' }}>
@@ -37,7 +36,6 @@ export default class DetailText extends Component {
                     renderItem={({item})=>this.createListItemView(item)}/>
             </View>
         );
-
     }
 
     loadData() {
@@ -68,7 +66,7 @@ export default class DetailText extends Component {
             headers: {
                 'Content-Type': 'application/x-www-form-urlencoded'
             },
-            body: 'ip=' + params.ip + '&port=' + params.port + '&pwd=' + params.pwd + '&key=' + params.key
+            body: 'ip=' + params.ip + '&port=' + params.port + '&pwd=' + params.pwd + '&key=' + params.key + '&dbindex=' + params.dbindex
         }).then((resp)=>resp.json()).then((respJson)=> {
             let datasource = new Array();
             for (let key in respJson.content) {

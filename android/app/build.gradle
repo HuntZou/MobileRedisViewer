@@ -105,9 +105,9 @@ android {
     }
     signingConfigs {
             release {
-                storeFile file("jhinwins.keystore")
+                storeFile file("./Jhinwins.keystore")
                 storePassword "zouheng613"
-                keyAlias "my-key-alias"
+                keyAlias "jhinwins"
                 keyPassword "zouheng613"
             }
         }

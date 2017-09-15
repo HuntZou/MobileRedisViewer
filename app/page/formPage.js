@@ -48,7 +48,7 @@ export default class Page1 extends Component {
     }
 
     //初始化表单数据
-    componentDidMount() {
+    componentWillMount() {
         AsyncStorage.getItem('ip', (error, result)=> {
             this.ip = result;
             this.setState({
@@ -67,9 +67,24 @@ export default class Page1 extends Component {
                 defaultPwd: result
             })
         });
+        AsyncStorage.getItem('rememberMe', (error, result)=> {
+            if (!error) {
+                if ('y' == result && !this.state.rememberMe) {
+                    this.setState({
+                        rememberMe: true
+                    });
+                }
+                if ('n' == result && this.state.rememberMe) {
+                    this.setState({
+                        rememberMe: false
+                    });
+                }
+            }
+        });
     }
 
     render() {
+        console.log("render");
         return (
             <View style={{paddingTop:30}}>
                 <View id="ipInputBox">
@@ -123,9 +138,14 @@ export default class Page1 extends Component {
                     <CheckBox
                         title='remember me'
                         checked={this.state.rememberMe}
-                        onPress={()=>this.setState({
-                            rememberMe:!this.state.rememberMe
-                        })}
+                        onPress={()=>{
+                            //持久化rememberme选中状态
+                            AsyncStorage.setItem('rememberMe',!this.state.rememberMe?'y':'n');
+                            this.setState({
+                                rememberMe:!this.state.rememberMe
+                            })
+                        }
+                        }
                     />
                 </View>
                 <View style={{marginTop:30}}>
@@ -145,7 +165,6 @@ export default class Page1 extends Component {
     }
 
     doSubmit() {
-
         this.setState({
             showLoadingModal: true
         });
@@ -167,6 +186,9 @@ export default class Page1 extends Component {
                     AsyncStorage.setItem('ip', this.ip);
                     AsyncStorage.setItem('port', this.port);
                     AsyncStorage.setItem('pwd', this.pwd);
+                } else {
+                    //如果选择不保存表单数据，则清空原本保存的数据
+                    AsyncStorage.multiRemove(["ip", "port", "pwd"]);
                 }
 
                 this.props.navigation.navigate('ShowDBs', {
